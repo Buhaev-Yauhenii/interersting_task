@@ -9,9 +9,9 @@ from .models import User
 class UserAdmin(BaseUserAdmin):
     """create good view of model"""
 
-    ordering = ['id']
+    ordering = ['email']
     list_display = ['email', 'name', 'is_staff', 'is_superuser', 'balance', 'categories']
-    list_editable = ['is_staff', 'is_superuser', 'balance','categories']
+    list_editable = ['is_staff', 'is_superuser', 'balance', 'categories']
     fieldsets = (
         (_('Main information'),
          {'fields': ('email', 'password', 'balance',)}),
@@ -36,7 +36,7 @@ class UserAdmin(BaseUserAdmin):
                     'is_staff',
                     'is_superuser',
                     'balance',
-                    'categories'                )
+                    'categories')
             }),
     )
 

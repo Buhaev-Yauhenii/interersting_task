@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <h1>Hello! {{data_for_html['email']}}</h1>
+    <h2>Your balance is {{data_for_html['balance']}}</h2>
+
+    {%for item in data_for_html['categories']%}
+        <ul>
+        {% for key in item.keys %} 
+           <li>key: {{item.key}}</li>
+        {%endfor%}
+        </ul>
+    {%endfor%}
+
+</body>
+</html>

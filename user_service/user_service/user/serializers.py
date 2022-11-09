@@ -8,14 +8,17 @@ from rest_framework import serializers
 from django.db.models import F
 from user.models import User
 
+
 class UserSerializer(serializers.ModelSerializer):
     """serializer for model User"""
-    category_for_change = serializers.CharField(max_length = 255, required=False, allow_blank=True)
+    category_for_change = serializers.CharField(max_length=255, required=False, allow_blank=True)
+    is_delete = serializers.BooleanField(default=False)
+
     class Meta:
         model = get_user_model()
-        fields = ['email', 'password', 'name', 'balance', 'categories','category_for_change']
+        fields = ['email', 'password', 'name', 'balance', 'categories', 'category_for_change', 'is_delete']
         extra_kwargs = {
-                'password': {'write_only': True, 'min_length': 5}}
+            'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validated_data):
         """create and return user with encrypted data"""
@@ -24,27 +27,27 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Method for updateing user data"""
-        
+
         password = validated_data.pop('password', None)
-        categories = validated_data.pop('categories',None)
+        categories = validated_data.pop('categories', None)
         category_for_change_from_validated_data = validated_data.pop('category_for_change', None)
+        is_delete = validated_data.pop('is_delete', None)
         user = super().update(instance, validated_data)
         all_categories = [cat.strip() for cat in user.categories.split(',')]
 
         if password:
             user.set_password(password)
             user.save()
-        if category_for_change_from_validated_data:    
+        if category_for_change_from_validated_data and not is_delete:
             all_categories[all_categories.index(category_for_change_from_validated_data)] = categories
-            User.objects.filter(email=user.email).update(categories= ','.join(all_categories))
+            User.objects.filter(email=user.email).update(categories=','.join(all_categories))
         if not category_for_change_from_validated_data and categories:
-            # new_categories = user.categories + f', {categories}'
-            User.objects.filter(email=user.email).update(categories= new_categories)
-        
-            
-           
-            
-            
+            all_categories.append(categories)
+            print(all_categories)
+            User.objects.filter(email=user.email).update(categories=", ".join(all_categories))
+        if is_delete and category_for_change_from_validated_data in all_categories:
+            all_categories.remove(category_for_change_from_validated_data)
+            User.objects.filter(email=user.email).update(categories=", ".join(all_categories))
 
         return user
 

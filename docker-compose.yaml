@@ -25,6 +25,34 @@ services:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+  worker:
+    restart: always
+    build: 
+      context: ./user_service
+    volumes:
+      - ./app:/app
+    command: ['celery', '-A', 'app', 'worker', '-l', 'info']
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+  celery-beat: 
+    build: 
+      context: ./user_service
+    volumes:
+      - ./app:/app
+    command: ['celery', '-A', 'app', 'beat', '-l', 'info']
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
 
 volumes:
   dev-db-data:

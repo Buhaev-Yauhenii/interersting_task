@@ -20,15 +20,16 @@ def create_user(**kwargs):
 
 class PublicUserAPITests(TestCase):
     """test public API methods"""
+
     def SetUp(self):
         self.client = APIClient()
 
     def test_create_user_success(self):
         """test creating new user"""
         user_args = {
-                "email": 'test@test.test',
-                'password': 'example123',
-                'name': 'test_name', }
+            "email": 'test@test.test',
+            'password': 'example123',
+            'name': 'test_name', }
         res = self.client.post(CREATE_USER_URL, user_args)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         user = get_user_model().objects.get(email=user_args['email'])
@@ -38,9 +39,9 @@ class PublicUserAPITests(TestCase):
     def test_user_password_exists_errors(self):
         """test is password exists and errors about this"""
         user_args = {
-                'email': 'test@test.test',
-                'password': 'example123',
-                'name': 'test_name'}
+            'email': 'test@test.test',
+            'password': 'example123',
+            'name': 'test_name'}
         create_user(**user_args)
         res = self.client.post(CREATE_USER_URL, user_args)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
@@ -48,10 +49,10 @@ class PublicUserAPITests(TestCase):
     def test_short_password_error(self):
         """test is password to short"""
         user_args = {
-                'email': 'test@test.test',
-                'password': 'ex',
-                'name': 'test_name'
-                }
+            'email': 'test@test.test',
+            'password': 'ex',
+            'name': 'test_name'
+        }
         res = self.client.post(CREATE_USER_URL, user_args)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         user_exists = get_user_model().objects.filter(
@@ -111,6 +112,7 @@ class PublicUserAPITests(TestCase):
 
 class PrivateUserAPITests(TestCase):
     """Test cases for privet methods users can access."""
+
     def setUp(self):
         self.user = create_user(
             email='test@example.com',

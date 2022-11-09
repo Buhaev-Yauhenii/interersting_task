@@ -13,6 +13,10 @@ drf-spectacular = "*"
 psycopg2-binary = "*"
 django-money = "*"
 django-filter = "*"
+django-redis = "*"
+celery = "*"
+django-celery-beat = "*"
+numpy = "*"
 
 [dev-packages]
 

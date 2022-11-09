@@ -1,15 +1,17 @@
 from django.contrib import admin
 from .models import TransactionsHistory
+
+
 # Register your models here.
 
 class HistoryAdmin(admin.ModelAdmin):
-    ordering = ['id']
-    list_display = ['user_id', 'sum',
+    ordering = ['pk']
+    list_display = ['email', 'sum',
                     'time_of_transaction',
                     'category',
                     'organization',
                     'description']
-    readonly_fields = ['user_id',
+    readonly_fields = ['email',
                        'sum',
                        'time_of_transaction',
                        'category',

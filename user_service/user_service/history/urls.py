@@ -1,7 +1,9 @@
 from django.urls import path
+
 app_name = 'user'
 from history import views
+from history.models import TransactionsHistory
 
 urlpatterns = [
-    path('/create_transaction', views.CreateHistoryAPIView.as_view(), name="history")
+    path('/transactions', views.CreateHistoryAPIView.as_view(), name="history"),
 ]
